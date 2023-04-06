@@ -1,4 +1,6 @@
+import 'package:amazon/Authentication/Authenticate.dart';
 import 'package:amazon/Authentication/Login.dart';
+import 'package:amazon/Screens/chatroom.dart';
 import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: const Color(0xff1F1F1F)
       ),
-      home: const SignIn(),
+      home:  const Home(),
     );
   }
 }

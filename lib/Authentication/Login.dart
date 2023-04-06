@@ -1,11 +1,9 @@
 import 'package:amazon/Authentication/Register.dart';
 import 'package:amazon/Authentication/auth.dart';
-import 'package:amazon/Screens/home.dart';
+import 'package:amazon/Screens/chatroom.dart';
 import 'package:amazon/Widgets/reusableauth.dart';
 import 'package:flutter/material.dart';
 class SignIn extends StatefulWidget {
-  const SignIn({Key? key}) : super(key: key);
-
   @override
   State<SignIn> createState() => _SignInState();
 }
@@ -22,6 +20,7 @@ class _SignInState extends State<SignIn> {
     _emailcontroller.dispose();
     _passwordcontroller.dispose();
     _passwordfocusnode.dispose();
+    super.dispose();
   }
   void _submitformonlogin(){
     final  isvalid = _loginformkey.currentState!.validate();
@@ -47,7 +46,6 @@ class _SignInState extends State<SignIn> {
                           child: const Text("Ok"),
                           ),
                     ],
-
                   );
                 });
       });

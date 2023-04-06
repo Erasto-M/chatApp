@@ -1,9 +1,10 @@
 import 'package:amazon/Authentication/Login.dart';
 import 'package:amazon/Authentication/auth.dart';
+import 'package:amazon/Screens/database.dart';
 import 'package:amazon/Widgets/reusableauth.dart';
 import 'package:flutter/material.dart';
 
-import '../Screens/home.dart';
+import '../Screens/chatroom.dart';
 class SignUp extends StatefulWidget {
   @override
   State<SignUp> createState() => _SignUpState();
@@ -11,6 +12,7 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   AuthMethods authMethods = AuthMethods();
+  databaseMethods datamethods =databaseMethods();
   final _signupformkey = GlobalKey<FormState>();
   FocusNode _emailfocusnode = FocusNode();
   FocusNode _passwordfocusnode = FocusNode();
@@ -29,11 +31,16 @@ class _SignUpState extends State<SignUp> {
     super.dispose();
   }
   @override
-  void initstate(){
+  void initState(){
     super.initState();
-  }void _submitformonSignup(){
+  }
+  void _submitformonSignup(){
     final isvalid = _signupformkey.currentState!.validate();
     if(isvalid){
+      Map<String,String> userinfoMap = {
+        "name" : _usernamecontroller.text,
+        "email" : _emailcontroller.text,
+      };
       setState(() {
         _isloading = true;
       });
@@ -41,12 +48,13 @@ class _SignUpState extends State<SignUp> {
         _emailcontroller.text,
         _passwordcontroller.text.toString(),
       ).then((value) {
+        datamethods.uploaduserinfo(userinfoMap);
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>const Home()));
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text("Account successfully created"),
+              title: const Text("Account created successfully"),
               actions: [
                 TextButton(
                   onPressed: () {
