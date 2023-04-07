@@ -1,7 +1,10 @@
 import 'package:amazon/Authentication/Register.dart';
 import 'package:amazon/Authentication/auth.dart';
 import 'package:amazon/Screens/chatroom.dart';
+import 'package:amazon/Screens/database.dart';
 import 'package:amazon/Widgets/reusableauth.dart';
+import 'package:amazon/Widgets/sharedpreferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 class SignIn extends StatefulWidget {
   @override
@@ -10,6 +13,7 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   AuthMethods _authMethods = AuthMethods();
+  DatabaseMethods databaseMethods = DatabaseMethods();
   final _loginformkey = GlobalKey<FormState>();
   FocusNode _passwordfocusnode = FocusNode();
   late  TextEditingController _emailcontroller = TextEditingController(text: '') ;
@@ -22,35 +26,48 @@ class _SignInState extends State<SignIn> {
     _passwordfocusnode.dispose();
     super.dispose();
   }
-  void _submitformonlogin(){
-    final  isvalid = _loginformkey.currentState!.validate();
-    if(isvalid){
+  void _submitformonlogin() async {
+    final isvalid = _loginformkey.currentState!.validate();
+    if (isvalid) {
       setState(() {
         _isloading = true;
       });
-       _authMethods.signInWithEmailAndPassword(
-          _emailcontroller.text,
+      // await databaseMethods.getuserbyEmail(_emailcontroller.text).then((value) {
+      //   querySnapshot = value;
+      //   SharedPreferencesHelper.saveUserEmailintoHharedpref(querySnapshot!.docs[1].get("name"));
+      // });
+     await _authMethods.signInWithEmailAndPassword(
+        _emailcontroller.text,
         _passwordcontroller.text,
-          ).then((value) {
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>const Home()));
+      ).then((value)async {
+        if (value != null) {
+          QuerySnapshot _querySnapshot = await databaseMethods.getuserbyEmail(_emailcontroller.text);
+          SharedPreferencesHelper.saveUserLoggedintoHharedpref(true);
+          SharedPreferencesHelper.saveUserNametoHharedpref(_querySnapshot.docs[0].get("email"));
+          SharedPreferencesHelper.saveUserEmailintoHharedpref(_querySnapshot.docs[0].get("name"));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const Home())).then((value) {
             showDialog(
-                context: context,
-                builder: (BuildContext context){
-                  return  AlertDialog(
-                    title: const Text("Login Succesfully"),
-                    actions: [
-                      MaterialButton(
-                          onPressed: (){
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text("Ok"),
-                          ),
-                    ],
-                  );
-                });
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text("Login Succesfully"),
+                  actions: [
+                    MaterialButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("Ok"),
+                    ),
+                  ],
+                );
+              },
+            );
+          });
+        }
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

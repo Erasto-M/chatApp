@@ -42,7 +42,7 @@ class _HomeState extends State<Home> {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.search),
         onPressed: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>const SearchScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (context)=> SearchScreen()));
         },
       ),
     );

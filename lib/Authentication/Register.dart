@@ -2,6 +2,7 @@ import 'package:amazon/Authentication/Login.dart';
 import 'package:amazon/Authentication/auth.dart';
 import 'package:amazon/Screens/database.dart';
 import 'package:amazon/Widgets/reusableauth.dart';
+import 'package:amazon/Widgets/sharedpreferences.dart';
 import 'package:flutter/material.dart';
 
 import '../Screens/chatroom.dart';
@@ -12,7 +13,7 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   AuthMethods authMethods = AuthMethods();
-  databaseMethods datamethods =databaseMethods();
+  DatabaseMethods datamethods =DatabaseMethods();
   final _signupformkey = GlobalKey<FormState>();
   FocusNode _emailfocusnode = FocusNode();
   FocusNode _passwordfocusnode = FocusNode();
@@ -37,18 +38,17 @@ class _SignUpState extends State<SignUp> {
   void _submitformonSignup(){
     final isvalid = _signupformkey.currentState!.validate();
     if(isvalid){
-      Map<String,String> userinfoMap = {
-        "name" : _usernamecontroller.text,
-        "email" : _emailcontroller.text,
-      };
+      //SharedPreferencesHelper.saveUserEmailintoHharedpref(_emailcontroller.text);
+     // SharedPreferencesHelper.saveUserNametoHharedpref(_usernamecontroller.text);
       setState(() {
         _isloading = true;
       });
       authMethods.signUpWithEmailAndPassoword(
+        _usernamecontroller.text,
         _emailcontroller.text,
         _passwordcontroller.text.toString(),
       ).then((value) {
-        datamethods.uploaduserinfo(userinfoMap);
+        SharedPreferencesHelper.saveUserLoggedintoHharedpref(true);
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>const Home()));
         showDialog(
           context: context,
