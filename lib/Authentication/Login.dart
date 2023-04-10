@@ -7,7 +7,6 @@ import 'package:amazon/Widgets/sharedpreferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 class SignIn extends StatefulWidget {
-  @override
   State<SignIn> createState() => _SignInState();
 }
 
