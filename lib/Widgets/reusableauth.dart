@@ -38,6 +38,10 @@ TextStyle textStyle() {
 
 TextFormField _textFormField() {
   return TextFormField(
-    
+    decoration: InputDecoration(
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(20)
+      )
+    ),
   );
 }
